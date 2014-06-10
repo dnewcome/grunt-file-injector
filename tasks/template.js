@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
 
-	var description = 'Squirt the contents of files into other files';
+    var description = 'Squirt the contents of files into other files';
 
-	grunt.registerMultiTask('inject-file', description, function() {
+    grunt.registerMultiTask('inject-file', description, function() {
         function process_template(template, templateOptions) {
             var files = template.match(/{{.*?}}/g),
                 i, file, replacement;
@@ -19,56 +19,56 @@ module.exports = function(grunt) {
         }
 
         // Merge task-specific and/or target-specific options with these defaults:
-		var options = this.options({
-			'data': {},
-			'delimiters': 'config' // Default delimiters.
-		});
+        var options = this.options({
+            'data': {},
+            'delimiters': 'config' // Default delimiters.
+        });
 
-		// Iterate over all specified file groups.
-		this.files.forEach(function(file) {
-			// Concat specified files.
-			var src = file.src.filter(function(filePath) {
-				// Warn on and remove invalid source files.
-				if (!grunt.file.exists(filePath)) {
-					grunt.log.warn('Source file `' + filePath + '` not found.');
-					return false;
-				} else {
-					return true;
-				}
-			});
-			if (!src.length) {
-				grunt.log.warn(
-					'Destination `' + file.dest +
-					'` not written because `src` files were empty.'
-				);
-				return;
-			}
-			var template = src.map(function(filePath) {
-				// Read file source.
-				return grunt.file.read(filePath);
-			}).join('\n');
+        // Iterate over all specified file groups.
+        this.files.forEach(function(file) {
+            // Concat specified files.
+            var src = file.src.filter(function(filePath) {
+                // Warn on and remove invalid source files.
+                if (!grunt.file.exists(filePath)) {
+                    grunt.log.warn('Source file `' + filePath + '` not found.');
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            if (!src.length) {
+                grunt.log.warn(
+                    'Destination `' + file.dest +
+                    '` not written because `src` files were empty.'
+                );
+                return;
+            }
+            var template = src.map(function(filePath) {
+                // Read file source.
+                return grunt.file.read(filePath);
+            }).join('\n');
 
-			var templateOptions = {
-				'data': typeof options.data == 'function' ?
-					options.data() :
-					options.data
-			};
+            var templateOptions = {
+                'data': typeof options.data == 'function' ?
+                    options.data() :
+                    options.data
+            };
 
-			if (options.delimiters) {
-				templateOptions.delimiters = typeof options.delimiters == 'function' ?
-					options.delimiters() :
-					options.delimiters;
-			}
+            if (options.delimiters) {
+                templateOptions.delimiters = typeof options.delimiters == 'function' ?
+                    options.delimiters() :
+                    options.delimiters;
+            }
 
-			var result = process_template(template, templateOptions);
+            var result = process_template(template, templateOptions);
 
-			// Write the destination file
-			grunt.file.write(file.dest, result);
+            // Write the destination file
+            grunt.file.write(file.dest, result);
 
-			// Print a success message
-			grunt.log.writeln('File `' + file.dest + '` created.');
-		});
-	});
+            // Print a success message
+            grunt.log.writeln('File `' + file.dest + '` created.');
+        });
+    });
 };
 
 
