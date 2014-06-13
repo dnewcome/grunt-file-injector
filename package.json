@@ -1,6 +1,6 @@
 {
   "name": "grunt-file-injector",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Squirt files into other files",
   "main": "index.js",
   "scripts": {

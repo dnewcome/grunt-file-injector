@@ -4,12 +4,12 @@ module.exports = function(grunt) {
 
     grunt.registerMultiTask('inject-file', description, function() {
         function process_template(template, templateOptions) {
-            var files = template.match(/{{.*?}}/g),
+            var files = template.match(/{{{.*?}}}/g),
                 i, file, replacement;
 
             if(files) {
                 for(i = 0; i < files.length; i += 1) {
-                    file = files[i].replace('{{', '').replace('}}', '');
+                    file = files[i].replace('{{{', '').replace('}}}', '');
                     replacement = process_template(grunt.file.read(file));
                     template = template.replace(files[i], replacement);
                 }
