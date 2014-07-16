@@ -1,15 +1,18 @@
 module.exports = function(grunt) {
 
-    var description = 'Squirt the contents of files into other files';
+    var description = 'Squirt the contents of files into other files',
+        delimiterStart = '{{{',
+        delimiterEnd = '}}}';
 
     grunt.registerMultiTask('inject-file', description, function() {
         function process_template(template, templateOptions) {
-            var files = template.match(/{{{.*?}}}/g),
+            var regex = new RegExp(delimiterStart + '.*?' + delimiterEnd, 'g');
+            var files = template.match(regex),
                 i, file, replacement;
 
             if(files) {
                 for(i = 0; i < files.length; i += 1) {
-                    file = files[i].replace('{{{', '').replace('}}}', '');
+                    file = files[i].replace(delimiterStart, '').replace(delimiterEnd, '');
                     replacement = process_template(grunt.file.read(file));
                     template = template.replace(files[i], replacement);
                 }
