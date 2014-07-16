@@ -1,10 +1,18 @@
 module.exports = function(grunt) {
 
-    var description = 'Squirt the contents of files into other files',
-        delimiterStart = '{{{',
-        delimiterEnd = '}}}';
+
+    var description = 'Squirt the contents of files into other files';
 
     grunt.registerMultiTask('inject-file', description, function() {
+        // Merge task-specific and/or target-specific options with these defaults:
+        var options = this.options({
+            'data': {},
+            'delimiterStart': '{{{',
+            'delimiterEnd': '}}}'
+        }),
+            delimiterStart = options.delimiterStart,
+            delimiterEnd = options.delimiterEnd;
+
         function process_template(template, templateOptions) {
             var regex = new RegExp(delimiterStart + '.*?' + delimiterEnd, 'g');
             var files = template.match(regex),
@@ -17,21 +25,12 @@ module.exports = function(grunt) {
                     template = template.replace(files[i], replacement);
                 }
             }
-
             return template;
         }
 
-        // Merge task-specific and/or target-specific options with these defaults:
-        var options = this.options({
-            'data': {},
-            'delimiters': 'config' // Default delimiters.
-        });
-
-        // Iterate over all specified file groups.
         this.files.forEach(function(file) {
             // Concat specified files.
             var src = file.src.filter(function(filePath) {
-                // Warn on and remove invalid source files.
                 if (!grunt.file.exists(filePath)) {
                     grunt.log.warn('Source file `' + filePath + '` not found.');
                     return false;
@@ -39,6 +38,7 @@ module.exports = function(grunt) {
                     return true;
                 }
             });
+
             if (!src.length) {
                 grunt.log.warn(
                     'Destination `' + file.dest +
@@ -67,8 +67,6 @@ module.exports = function(grunt) {
 
             // Write the destination file
             grunt.file.write(file.dest, result);
-
-            // Print a success message
             grunt.log.writeln('File `' + file.dest + '` created.');
         });
     });

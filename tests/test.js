@@ -14,7 +14,10 @@ describe('grunt test', function(done) {
         grunt.initConfig({
           'inject-file': {
             'process-html-template': {
-              'options': {},
+              'options': {
+                delimiterStart: '{{{',
+                delimiterEnd: '}}}'
+              },
               'files': {
                  'tests/index.html': ['tests/index.html.tpl']
               }
