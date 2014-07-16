@@ -1,6 +1,5 @@
 module.exports = function(grunt) {
 
-
     var description = 'Squirt the contents of files into other files';
 
     grunt.registerMultiTask('inject-file', description, function() {
@@ -21,6 +20,7 @@ module.exports = function(grunt) {
             if(files) {
                 for(i = 0; i < files.length; i += 1) {
                     file = files[i].replace(delimiterStart, '').replace(delimiterEnd, '');
+                    file = file.trim();
                     replacement = process_template(grunt.file.read(file));
                     template = template.replace(files[i], replacement);
                 }
